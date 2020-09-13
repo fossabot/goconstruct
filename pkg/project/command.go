@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"log"
+	"strings"
 
 	"github.com/peterbourgon/ff/v3/ffcli"
 )
@@ -11,9 +12,12 @@ import (
 func NewCommand(logger *log.Logger) *ffcli.Command {
 	var (
 		rootFlagSet = flag.NewFlagSet("project", flag.ExitOnError)
-		name        = rootFlagSet.String("name", "", "The new project's name.")
-		path        = rootFlagSet.String("path", "", "Where on your filesystem the project should be generated.")
+		tmplsPath   = rootFlagSet.String("templates-path", "", "Path to templates.")
+		tmpls       = rootFlagSet.String("templates", "glue", "A comma-separate list of template names.")
+		config      = rootFlagSet.String("config", "config.hcl", "A config file defining values for the required variables for all templates used.")
 	)
+
+	templates := strings.Split(*tmpls, ",")
 
 	return &ffcli.Command{
 		Name:       "project",
@@ -21,14 +25,15 @@ func NewCommand(logger *log.Logger) *ffcli.Command {
 		FlagSet:    rootFlagSet,
 		Subcommands: []*ffcli.Command{
 			{
-				Name:       "generate ",
+				Name:       "generate",
 				ShortUsage: "generate [flags]",
 				ShortHelp:  "Generates a new project.",
 				FlagSet:    rootFlagSet,
 				Exec: generate(
 					generateConfig{
-						projectName: name,
-						projectPath: path,
+						templatesPath:      tmplsPath,
+						templates:          templates,
+						templateConfigFile: config,
 					},
 					logger),
 			},

@@ -18,19 +18,14 @@ default: help
 all: mod-download dev-dependencies fmt test vet staticcheck build install ## Runs the required cleaning and verification targets.
 .PHONY: all
 
-generate: ## Compiles protobufs, generating Go code.
-	@echo "==> Compiling protobufs."
-	@protoc -I=. --go_out=plugins=grpc,paths=source_relative:. **/*.proto
-.PHONY: generate
-
-build: generate ## Compiles the protobufs and builds the lodiseval binary.
+build: ## Compiles the goconstruct binary.
 	@echo "==> Building binary."
-	@go build -o bin/lodiseval main.go
+	@go build -o bin/goconstruct main.go
 .PHONY: build
 
 install: ## Runs 'go install', putting the binary in $GOPATH/bin.
 	@echo "==> Installing binary."
-	@go install github.com/mccurdyc/lodiseval
+	@go install github.com/mccurdyc/goconstruct
 .PHONY: install
 
 tidy: ## Cleans the Go module.

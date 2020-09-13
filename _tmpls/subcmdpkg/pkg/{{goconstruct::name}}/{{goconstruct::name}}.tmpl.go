@@ -16,7 +16,7 @@ func NewCommand(logger *log.Logger) *ffcli.Command {
 	return &ffcli.Command{
 		Name:       "{{goconstruct::name}}",
 		ShortUsage: "{{goconstruct::name}} <subcommand>",
-		FlagSet:    replicaFlagSet,
+		FlagSet:    rootFlagSet,
 		Exec: func(context.Context, []string) error {
 			return flag.ErrHelp
 		},

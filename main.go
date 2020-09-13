@@ -6,13 +6,14 @@ import (
 	"log"
 	"os"
 
+	"github.com/mccurdyc/goconstruct/pkg/project"
 	"github.com/peterbourgon/ff/v3/ffcli"
 	"github.com/rs/zerolog"
 )
 
 func main() {
 	l := zerolog.New(os.Stdout)
-	logger := log.New(l, "", log.Ldate|log.Ltime|log.LUTC)
+	logger := log.New(l, "goconstruct - ", log.Ldate|log.Ltime|log.LUTC)
 
 	os.Exit(Run(context.Background(), os.Args[1:], logger))
 }

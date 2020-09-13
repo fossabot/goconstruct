@@ -9,14 +9,14 @@ import (
 type execFn func(context.Context, []string) error
 
 type generateConfig struct {
-	projectName *string
-	projectPath *string
+	templatesPath      *string
+	templates          []string
+	templateConfigFile *string
 }
 
 func generate(cfg generateConfig, logger *log.Logger) execFn {
 	return func(ctx context.Context, _ []string) error {
-		logger.Printf("name: %s\n", *cfg.projectName)
-		logger.Printf("path: %s\n", *cfg.projectPath)
+		logger.Printf("templates: %v\n", cfg.templates)
 		return errors.New("not implemented")
 	}
 }
