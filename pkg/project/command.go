@@ -14,7 +14,8 @@ func NewCommand(logger *log.Logger) *ffcli.Command {
 		rootFlagSet = flag.NewFlagSet("project", flag.ExitOnError)
 		tmplsPath   = rootFlagSet.String("templates-path", "", "Path to templates.")
 		tmpls       = rootFlagSet.String("templates", "glue", "A comma-separate list of template names.")
-		config      = rootFlagSet.String("config", "config.hcl", "A config file defining values for the required variables for all templates used.")
+		dest        = rootFlagSet.String("destination", ".", "The destination directory where the project should be created.")
+		config      = rootFlagSet.String("config", "config.toml", "A config file defining values for the required variables for all templates used.")
 	)
 
 	templates := strings.Split(*tmpls, ",")
@@ -34,6 +35,7 @@ func NewCommand(logger *log.Logger) *ffcli.Command {
 						templatesPath:      tmplsPath,
 						templates:          templates,
 						templateConfigFile: config,
+						dest:               dest,
 					},
 					logger),
 			},
