@@ -12,7 +12,7 @@ import (
 func NewCommand(logger *log.Logger) *ffcli.Command {
 	var (
 		rootFlagSet = flag.NewFlagSet("project", flag.ExitOnError)
-		tmplsPath   = rootFlagSet.String("templates-path", "", "Path to templates.")
+		tmplsPath   = rootFlagSet.String("templates-path", "./_tmpls", "Path to templates.")
 		tmpls       = rootFlagSet.String("templates", "glue", "A comma-separate list of template names.")
 		dest        = rootFlagSet.String("destination", ".", "The destination directory where the project should be created.")
 		config      = rootFlagSet.String("config", "config.toml", "A config file defining values for the required variables for all templates used.")

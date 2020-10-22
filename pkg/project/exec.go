@@ -14,11 +14,6 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
-// goconstructTmplRe looks for {{ goconstruct::VAR }} and stores VAR in a capture group
-// in order to look up the variable defined in the template variables file with the
-// name of VAR.
-var goconstructTmplRe = regexp.MustCompile(`{{\s*goconstruct::(?P<Var>.+\s*}})`)
-
 type execFn func(context.Context, []string) error
 
 type generateConfig struct {
@@ -30,39 +25,68 @@ type generateConfig struct {
 
 func generate(cfg generateConfig, logger *log.Logger) execFn {
 	return func(ctx context.Context, _ []string) error {
-		dynamicCfg, err := readDynamicConfig(*cfg.templateConfigFile)
+		tmplVarDefs, err := readDynamicConfig(*cfg.templateConfigFile)
 		if err != nil {
 			return err
 		}
-
-		logger.Printf("template config: %v\n", dynamicCfg)
-		tt
 
 		for _, tmpl := range cfg.templates {
 			src := filepath.Join(*cfg.templatesPath, tmpl)
 			dst := filepath.Join(*cfg.dest, tmpl)
 
-			copyFile(dst, src)
-
-			tmplVarDefs, err := readDynamicConfig(*cfg.templateConfigFile)
-			if err != nil {
+			if err := copyDir(dst, src); err != nil {
 				return err
 			}
 
-			// Render template / replace placeholders.
-			fb, err := ioutil.ReadFile(dst)
-			if err != nil {
+			if err := renderDir(dst, tmplVarDefs); err != nil {
 				return err
-			}
-
-			vars := goconstructTmplRe.SubexpNames()
-			for i, v := range vars {
-				_ := goconstructTmplRe.ReplaceAllString(fb, tmplVarDefs[])
 			}
 		}
 
 		return nil
 	}
+}
+
+// goconstructTmplRe looks for {{ goconstruct::VAR }} and stores VAR in a capture group
+// in order to look up the variable defined in the template variables file with the
+// name of VAR.
+var goconstructTmplRe = regexp.MustCompile(`{{\s*goconstruct::(?P<Var>.+\s*}})`)
+
+func renderDir(filename string, config map[string]interface{}) error {
+	files, err := ioutil.ReadDir(filename)
+	if err != nil {
+		return err
+	}
+
+	for _, file := range files {
+		if file.IsDir() {
+			renderDir(file.Name(), config)
+			if err := renderFile(file.Name(), config); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
+func renderFile(filename string, config map[string]interface{}) error {
+	// Render template / replace placeholders.
+	fb, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return err
+	}
+
+	vars := goconstructTmplRe.SubexpNames()
+	for _, v := range vars {
+		fb = goconstructTmplRe.ReplaceAll(fb, []byte(config[v].(string)))
+	}
+
+	if err := ioutil.WriteFile(filename, fb, 0644); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func readDynamicConfig(f string) (map[string]interface{}, error) {
@@ -101,13 +125,14 @@ func copyDir(dst string, src string) error {
 		dstfp := path.Join(dst, f.Name())
 
 		if f.IsDir() {
-			if err = copyDir(srcfp, dstfp); err != nil {
+			if err := copyDir(dstfp, srcfp); err != nil {
 				return err
 			}
-		} else {
-			if err = copyFile(srcfp, dstfp); err != nil {
-				return err
-			}
+			continue
+		}
+
+		if err := copyFile(dstfp, srcfp); err != nil {
+			return err
 		}
 	}
 
