@@ -27,7 +27,7 @@ func TestReadDynamicConfig(t *testing.T) {
 	tests := []struct {
 		name    string
 		input   []byte
-		want    map[string]string
+		want    map[string]interface{}
 		wantErr bool
 	}{
 		{
@@ -36,7 +36,7 @@ func TestReadDynamicConfig(t *testing.T) {
 foo = "foo"
 bar = "bar"
 `),
-			want: map[string]string{
+			want: map[string]interface{}{
 				"foo": "foo",
 				"bar": "bar",
 			},
@@ -136,17 +136,16 @@ func TestRenderDir(t *testing.T) {
 	}
 
 	err = ioutil.WriteFile(filepath.Join(tmplSubDir, "main.txt"), []byte(`
-{{goconstruct::foo}}
+{{.Foo}}
 hello
-{{goconstruct::bar}}
-`), 0644)
+{{.Bar}}`), 0644)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = renderDir(tmplDir, map[string]string{
-		"foo": "foo",
-		"bar": "bar",
+	err = renderDir(tmplDir, map[string]interface{}{
+		"Foo": "foo",
+		"Bar": "bar",
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -160,8 +159,7 @@ hello
 	expected := []byte(`
 foo
 hello
-bar
-`)
+bar`)
 
 	if sha256.Sum256(actual) != sha256.Sum256(expected) {
 		t.Fatalf("Input and output files do not match\n"+

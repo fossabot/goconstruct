@@ -1,6 +1,7 @@
 package project
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -9,7 +10,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"regexp"
+	"text/template"
 
 	"github.com/BurntSushi/toml"
 )
@@ -47,12 +48,7 @@ func generate(cfg generateConfig, logger *log.Logger) execFn {
 	}
 }
 
-// goconstructTmplRe looks for {{ goconstruct::VAR }} and stores VAR in a capture group
-// in order to look up the variable defined in the template variables file with the
-// name of VAR.
-var goconstructTmplRe = regexp.MustCompile(`{{\s*goconstruct::(?P<Var>.+\s*}})`)
-
-func renderDir(filename string, config map[string]string) error {
+func renderDir(filename string, config map[string]interface{}) error {
 	files, err := ioutil.ReadDir(filename)
 	if err != nil {
 		return err
@@ -74,32 +70,30 @@ func renderDir(filename string, config map[string]string) error {
 	return nil
 }
 
-func renderFile(filename string, config map[string]string) error {
-	// Render template / replace placeholders.
-	fb, err := ioutil.ReadFile(filename)
+func renderFile(filename string, config map[string]interface{}) error {
+	t, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return err
 	}
 
-	vars := goconstructTmplRe.SubexpNames()
-	for _, v := range vars {
-		fb = goconstructTmplRe.ReplaceAll(fb, []byte(config[v]))
-	}
+	tmpl := template.Must(template.New(filename).Parse(string(t)))
 
-	if err := ioutil.WriteFile(filename, fb, 0644); err != nil {
+	buf := &bytes.Buffer{}
+	err = tmpl.Execute(buf, config)
+	if err != nil {
 		return err
 	}
 
-	return nil
+	return ioutil.WriteFile(filename, buf.Bytes(), 0644)
 }
 
-func readDynamicConfig(f string) (map[string]string, error) {
+func readDynamicConfig(f string) (map[string]interface{}, error) {
 	b, err := ioutil.ReadFile(f)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read config file: %w", err)
 	}
 
-	dynamicCfg := make(map[string]string)
+	dynamicCfg := make(map[string]interface{})
 
 	if err := toml.Unmarshal(b, &dynamicCfg); err != nil {
 		return nil, fmt.Errorf("failed to parse config file: %w", err)
