@@ -52,7 +52,7 @@ func generate(cfg generateConfig, logger *log.Logger) execFn {
 // name of VAR.
 var goconstructTmplRe = regexp.MustCompile(`{{\s*goconstruct::(?P<Var>.+\s*}})`)
 
-func renderDir(filename string, config map[string]interface{}) error {
+func renderDir(filename string, config map[string]string) error {
 	files, err := ioutil.ReadDir(filename)
 	if err != nil {
 		return err
@@ -74,7 +74,7 @@ func renderDir(filename string, config map[string]interface{}) error {
 	return nil
 }
 
-func renderFile(filename string, config map[string]interface{}) error {
+func renderFile(filename string, config map[string]string) error {
 	// Render template / replace placeholders.
 	fb, err := ioutil.ReadFile(filename)
 	if err != nil {
@@ -83,7 +83,7 @@ func renderFile(filename string, config map[string]interface{}) error {
 
 	vars := goconstructTmplRe.SubexpNames()
 	for _, v := range vars {
-		fb = goconstructTmplRe.ReplaceAll(fb, []byte(config[v].(string)))
+		fb = goconstructTmplRe.ReplaceAll(fb, []byte(config[v]))
 	}
 
 	if err := ioutil.WriteFile(filename, fb, 0644); err != nil {
@@ -93,13 +93,13 @@ func renderFile(filename string, config map[string]interface{}) error {
 	return nil
 }
 
-func readDynamicConfig(f string) (map[string]interface{}, error) {
+func readDynamicConfig(f string) (map[string]string, error) {
 	b, err := ioutil.ReadFile(f)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read config file: %w", err)
 	}
 
-	dynamicCfg := make(map[string]interface{})
+	dynamicCfg := make(map[string]string)
 
 	if err := toml.Unmarshal(b, &dynamicCfg); err != nil {
 		return nil, fmt.Errorf("failed to parse config file: %w", err)

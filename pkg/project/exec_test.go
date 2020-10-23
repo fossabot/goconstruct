@@ -27,7 +27,7 @@ func TestReadDynamicConfig(t *testing.T) {
 	tests := []struct {
 		name    string
 		input   []byte
-		want    map[string]interface{}
+		want    map[string]string
 		wantErr bool
 	}{
 		{
@@ -36,7 +36,7 @@ func TestReadDynamicConfig(t *testing.T) {
 foo = "foo"
 bar = "bar"
 `),
-			want: map[string]interface{}{
+			want: map[string]string{
 				"foo": "foo",
 				"bar": "bar",
 			},
@@ -113,5 +113,58 @@ func TestCopyDir(t *testing.T) {
 	if sha256.Sum256(in) != sha256.Sum256(out) {
 		t.Fatalf("Input and output files do not match\n"+
 			"Input:\n%s\nOutput:\n%s\n", string(in), string(out))
+	}
+}
+
+func TestRenderDir(t *testing.T) {
+	tmpdir, err := ioutil.TempDir("", "render-dir-test")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer os.RemoveAll(tmpdir)
+
+	tmplDir := filepath.Join(tmpdir, "templates")
+	err = os.Mkdir(tmplDir, os.ModePerm)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tmplSubDir := filepath.Join(tmplDir, "sub-dir")
+	err = os.Mkdir(tmplSubDir, os.ModePerm)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = ioutil.WriteFile(filepath.Join(tmplSubDir, "main.txt"), []byte(`
+{{goconstruct::foo}}
+hello
+{{goconstruct::bar}}
+`), 0644)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = renderDir(tmplDir, map[string]string{
+		"foo": "foo",
+		"bar": "bar",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	actual, err := ioutil.ReadFile(filepath.Join(tmplSubDir, "main.txt"))
+	if err != nil {
+		t.Fatal("could not read file template sub-dir/main.txt")
+	}
+
+	expected := []byte(`
+foo
+hello
+bar
+`)
+
+	if sha256.Sum256(actual) != sha256.Sum256(expected) {
+		t.Fatalf("Input and output files do not match\n"+
+			"Actual:\n%s\nExpected:\n%s\n", string(actual), string(expected))
 	}
 }
