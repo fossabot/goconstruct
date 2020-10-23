@@ -1,17 +1,17 @@
 <div align="center">
-  <h3 align="center">{{goconstruct::name}}</h3>
-  <p align="center">{{goconstruct::readme_description}}</p>
+  <h3 align="center">{{.Name}}</h3>
+  <p align="center">{{.Description}}</p>
 </div>
 
 ## Installing
 
-{{goconstruct::readme_installing}}
+{{.Installing}}
 
 ## Usage
 
-{{goconstruct::readme_usage}}
+{{.Usage}}
 
 
 ## Developing
 
-{{goconstruct::readme_developing}}
+{{.Developing}}

@@ -1,3 +1,3 @@
-module {{goconstruct::module_name}}
+module {{.ModuleName}}
 
 go 1.15

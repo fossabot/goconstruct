@@ -12,19 +12,19 @@ import (
 
 func main() {
 	l := zerolog.New(os.Stdout)
-	logger := log.New(l, "{{goconstruct::name}}", log.Ldate|log.Ltime|log.LUTC)
+	logger := log.New(l, "{{.Name}}", log.Ldate|log.Ltime|log.LUTC)
 
 	os.Exit(Run(context.Background(), os.Args[1:], logger))
 }
 
 func Run(ctx context.Context, args []string, l *log.Logger) int {
 	var (
-		rootFlagSet = flag.NewFlagSet("{{goconstruct::name}}", flag.ExitOnError)
+		rootFlagSet = flag.NewFlagSet("{{.Name}}", flag.ExitOnError)
 	)
 
 	root := &ffcli.Command{
-		Name:        "{{goconstruct::name}}",
-		ShortUsage:  "{{goconstruct::name}} <subcommand> [flags]",
+		Name:        "{{.Name}}",
+		ShortUsage:  "{{.Name}} <subcommand> [flags]",
 		FlagSet:     rootFlagSet,
 		Subcommands: []*ffcli.Command{
 			// subpkgfoo.NewCommand(l),
