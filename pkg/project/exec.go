@@ -60,10 +60,14 @@ func renderDir(filename string, config map[string]interface{}) error {
 
 	for _, file := range files {
 		if file.IsDir() {
-			renderDir(file.Name(), config)
-			if err := renderFile(file.Name(), config); err != nil {
+			if err := renderDir(filepath.Join(filename, file.Name()), config); err != nil {
 				return err
 			}
+			continue
+		}
+
+		if err := renderFile(filepath.Join(filename, file.Name()), config); err != nil {
+			return err
 		}
 	}
 
@@ -155,7 +159,7 @@ func copyFile(dst string, src string) error {
 
 	_, err = io.Copy(to, from)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	return nil
