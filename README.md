@@ -25,6 +25,11 @@
 goconstruct provides a way to construct Go projects from opinionated, templated,
 components.
 
+My goal with this project, specifically with the templates is to "document"
+the opinions that I have in the form of templates that can be shared and used by
+others or minimally, referenced in code reviews. While these opinions are my own,
+they have absolutely been influenced by the work of others.
+
 ## Installing
 
 ```sh
