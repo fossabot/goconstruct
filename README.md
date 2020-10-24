@@ -1,13 +1,13 @@
 <div align="center">
   <img src="./docs/imgs/logo.png"><br>
   <p align="center">Go project construction from opinionated templates.</p>
-</div>
 
-[![Build Status][build-badge]][build-url]
-[![GoDev][godev-badge]][godev-url]
-[![License][license-badge]][license-url]
-[![codecov][codecov-badge]][codecov-url]
-[![Release][release-badge]][release-url]
+  [![Build Status][build-badge]][build-url]
+  [![GoDev][godev-badge]][godev-url]
+  [![License][license-badge]][license-url]
+  [![codecov][codecov-badge]][codecov-url]
+  [![Release][release-badge]][release-url]
+</div>
 
 [build-badge]: https://github.com/mccurdyc/goconstruct/workflows/build-test/badge.svg
 [build-url]: https://github.com/mccurdyc/goconstruct/actions
