@@ -28,7 +28,7 @@ func Run(ctx context.Context, args []string, l *log.Logger) int {
 		ShortUsage: "goconstruct <subcommand> [flags]",
 		FlagSet:    rootFlagSet,
 		Subcommands: []*ffcli.Command{
-			project.NewCommand(l),
+			project.NewCommand(args[2:], l),
 		},
 		Exec: func(context.Context, []string) error {
 			return flag.ErrHelp

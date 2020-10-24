@@ -6,10 +6,11 @@ import (
 	"log"
 	"strings"
 
+	"github.com/peterbourgon/ff"
 	"github.com/peterbourgon/ff/v3/ffcli"
 )
 
-func NewCommand(logger *log.Logger) *ffcli.Command {
+func NewCommand(args []string, l *log.Logger) *ffcli.Command {
 	var (
 		fs        = flag.NewFlagSet("project", flag.ExitOnError)
 		tmplsPath = fs.String("templates-path", "./_tmpls", "Path to templates.")
@@ -17,6 +18,12 @@ func NewCommand(logger *log.Logger) *ffcli.Command {
 		dest      = fs.String("destination", ".", "The destination directory where the project should be created.")
 		config    = fs.String("config", "config.toml", "A config file defining values for the required variables for all templates used.")
 	)
+
+	err := ff.Parse(fs, args)
+	if err != nil {
+		l.Printf("failed to parse flags: %+v", err)
+		return nil
+	}
 
 	return &ffcli.Command{
 		Name:       "project",
@@ -35,7 +42,7 @@ func NewCommand(logger *log.Logger) *ffcli.Command {
 						templateConfigFile: *config,
 						dest:               *dest,
 					},
-					logger),
+					l),
 			},
 		},
 		Exec: func(context.Context, []string) error {
