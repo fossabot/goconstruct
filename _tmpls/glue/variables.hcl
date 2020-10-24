@@ -8,6 +8,16 @@ variable "ModuleName" {
   description = "The Go module's name."
 }
 
+variable "GitHubUser" {
+  type = string
+  description = "The GitHub user/org."
+}
+
+variable "License" {
+  type = string
+  description = "The project's license name."
+}
+
 variable "BuildCommand" {
   type = string
   description = "A command for building the binary or binaries."
@@ -23,7 +33,7 @@ variable "Usage" {
   description = "The README's usage section."
 }
 
-variable "Developing" {
+variable "Contributing" {
   type = string
-  description = "The README's developing section."
+  description = "The README's contributing section."
 }

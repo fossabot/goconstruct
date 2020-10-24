@@ -35,7 +35,7 @@ func Run(ctx context.Context, args []string, l *log.Logger) int {
 		},
 	}
 
-	err := root.ParseAndRun(context.Background(), os.Args[1:])
+	err := root.ParseAndRun(context.Background(), args[1:])
 	if err != nil {
 		l.Fatal(err)
 		return 1
