@@ -18,19 +18,14 @@ default: help
 all: mod-download dev-dependencies fmt test vet staticcheck build install ## Runs the required cleaning and verification targets.
 .PHONY: all
 
-generate: ## Compiles protobufs, generating Go code.
-	@echo "==> Compiling protobufs."
-	@protoc -I=. --go_out=plugins=grpc,paths=source_relative:. **/*.proto
-.PHONY: generate
-
-build: generate ## Builds the tool.
+build: ## Compiles the goconstruct binary.
 	@echo "==> Building binary."
-{{{.BuildCommand}}}
+	@go build -o bin/goconstruct main.go
 .PHONY: build
 
 install: ## Runs 'go install', putting the binary in $GOPATH/bin.
 	@echo "==> Installing binary."
-	@go install {{{.ModuleName}}}
+	@go install github.com/mccurdyc/goconstruct
 .PHONY: install
 
 tidy: ## Cleans the Go module.
@@ -47,6 +42,7 @@ dev-dependencies: ## Downloads the necessesary dev dependencies.
 	@echo "==> Downloading development dependencies."
 	@go install honnef.co/go/tools/cmd/staticcheck
 	@go install golang.org/x/tools/cmd/goimports
+	@go install github.com/goreleaser/goreleaser
 .PHONY: dev-dependencies
 
 check-imports: ## A check which lists improperly-formatted imports, if they exist.
@@ -80,6 +76,9 @@ staticcheck: ## Runs the staticcheck linter.
 	@echo "==> Running staticcheck."
 	@staticcheck ./...
 .PHONY: staticcheck
+
+test-full: test-race staticcheck vet fmt ## Runs all checks that should be run before merging into the main branch.
+.PHONY: test-full
 
 test: ## Runs the test suit with minimal flags for quick iteration.
 	@go test -v ${GO_LIST}/...
