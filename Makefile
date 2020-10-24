@@ -76,6 +76,9 @@ staticcheck: ## Runs the staticcheck linter.
 	@staticcheck ./...
 .PHONY: staticcheck
 
+test-full: test-race staticcheck vet fmt ## Runs all checks that should be run before merging into the main branch.
+.PHONY: test-full
+
 test: ## Runs the test suit with minimal flags for quick iteration.
 	@go test -v ${GO_LIST}/...
 .PHONY: test

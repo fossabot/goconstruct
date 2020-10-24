@@ -58,7 +58,7 @@ FLAGS
 
 ## Contributing
 
-TODO
++ [Check out the CONTRIBUTING document.](./CONTRIBUTING.md)
 
 ## License
 
@@ -68,10 +68,11 @@ TODO
 
 ## TODOs
 
-- Handle `goconstruct` with missing subcommands.
-- GitHub Action for CI (build and test).
-- Backport changes to goconstruct to the template files.
-- Render templated filenames.
-- Configurable template delimeters.
-- Move templates to a separate GitHub repository.
-- Generate README usage section via Make target or something.
+1. Handle `goconstruct` with missing subcommands.
+1. GitHub Action for CI (build and test).
+1. Simplify each template so that they are more composable and align with the Unix philosophy of doing one thing.
+1. Backport changes to goconstruct to the template files.
+1. Render templated filenames.
+1. Configurable template delimeters.
+1. Move templates to a separate GitHub repository.
+1. Generate README usage section via Make target or something.
