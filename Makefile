@@ -42,6 +42,7 @@ dev-dependencies: ## Downloads the necessesary dev dependencies.
 	@echo "==> Downloading development dependencies."
 	@go install honnef.co/go/tools/cmd/staticcheck
 	@go install golang.org/x/tools/cmd/goimports
+	@go install github.com/goreleaser/goreleaser
 .PHONY: dev-dependencies
 
 check-imports: ## A check which lists improperly-formatted imports, if they exist.
