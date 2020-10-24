@@ -2,27 +2,13 @@
   <img src="./docs/imgs/logo.png"><br>
   <h3 align="center">{{{.Name}}}</h3>
   <p align="center">{{{.Description}}}</p>
+
+  [![Build Status][build-badge]][build-url]
+  [![GoDev][godev-badge]][godev-url]
+  [![License][license-badge]][license-url]
+  [![codecov][codecov-badge]][codecov-url]
+  [![Release][release-badge]][release-url]
 </div>
-
-## Installing
-
-{{{.Installing}}}
-
-## Usage
-
-{{{.Usage}}}
-
-## Contributing
-
-{{{.Contributing}}}
-
-[![Build Status][build-badge]][build-url]
-[![GoDev][godev-badge]][godev-url]
-[![License][license-badge]][license-url]
-[![codecov][codecov-badge]][codecov-url]
-[![Release][release-badge]][release-url]
-
-[![go.dev reference][godev-badge]][godev-url]
 
 [build-badge]: https://circleci.com/gh/{{{.GitHubUser}}}/{{{.Name}}}/tree/master.svg?style=svg
 [build-url]: https://circleci.com/gh/{{{.GitHubUser}}}/{{{.Name}}}/tree/master
@@ -34,6 +20,18 @@
 [codecov-url]: https://codecov.io/gh/{{{.GitHubUser}}}/{{{.Name}}}
 [release-badge]: https://img.shields.io/github/release/{{{.GitHubUser}}}/{{{.Name}}}.svg
 [release-url]: https://github.com/{{{.GitHubUser}}}/{{{.Name}}}/releases/latest
+
+## Installing
+
+{{{.Installing}}}
+
+## Usage
+
+{{{.Usage}}}
+
+## Contributing
+
++ [Check out the CONTRIBUTING document.](./CONTRIBUTING.md)
 
 ## License
 
