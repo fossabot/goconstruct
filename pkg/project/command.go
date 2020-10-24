@@ -11,31 +11,29 @@ import (
 
 func NewCommand(logger *log.Logger) *ffcli.Command {
 	var (
-		rootFlagSet = flag.NewFlagSet("project", flag.ExitOnError)
-		tmplsPath   = rootFlagSet.String("templates-path", "./_tmpls", "Path to templates.")
-		tmpls       = rootFlagSet.String("templates", "glue", "A comma-separate list of template names.")
-		dest        = rootFlagSet.String("destination", ".", "The destination directory where the project should be created.")
-		config      = rootFlagSet.String("config", "config.toml", "A config file defining values for the required variables for all templates used.")
+		fs        = flag.NewFlagSet("project", flag.ExitOnError)
+		tmplsPath = fs.String("templates-path", "./_tmpls", "Path to templates.")
+		tmpls     = fs.String("templates", "glue", "A comma-separate list of template names.")
+		dest      = fs.String("destination", ".", "The destination directory where the project should be created.")
+		config    = fs.String("config", "config.toml", "A config file defining values for the required variables for all templates used.")
 	)
-
-	templates := strings.Split(*tmpls, ",")
 
 	return &ffcli.Command{
 		Name:       "project",
 		ShortUsage: "project <subcommand>",
-		FlagSet:    rootFlagSet,
+		FlagSet:    fs,
 		Subcommands: []*ffcli.Command{
 			{
 				Name:       "generate",
 				ShortUsage: "generate [flags]",
 				ShortHelp:  "Generates a new project.",
-				FlagSet:    rootFlagSet,
+				FlagSet:    fs,
 				Exec: generate(
 					generateConfig{
-						templatesPath:      tmplsPath,
-						templates:          templates,
-						templateConfigFile: config,
-						dest:               dest,
+						templatesPath:      *tmplsPath,
+						templates:          strings.Split(*tmpls, ","),
+						templateConfigFile: *config,
+						dest:               *dest,
 					},
 					logger),
 			},

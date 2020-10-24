@@ -1,12 +1,1 @@
-[variables]
-name = "foo"
-go_module_name = "github.com/mccurdyc/foo"
-build_commands = [["echo", "\"foo\""]]
-
-[variables.readme]
-installing = """
-install here"""
-usage = """
-usage here"""
-developing = """
-developing here"""
+name = "foobar"

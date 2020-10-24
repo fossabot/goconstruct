@@ -25,12 +25,12 @@ generate: ## Compiles protobufs, generating Go code.
 
 build: generate ## Builds the tool.
 	@echo "==> Building binary."
-{{.BuildCommand}}
+{{{.BuildCommand}}}
 .PHONY: build
 
 install: ## Runs 'go install', putting the binary in $GOPATH/bin.
 	@echo "==> Installing binary."
-	@go install {{.ModuleName}}
+	@go install {{{.ModuleName}}}
 .PHONY: install
 
 tidy: ## Cleans the Go module.

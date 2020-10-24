@@ -1,3 +1,3 @@
-module {{.ModuleName}}
+module {{{.ModuleName}}}
 
 go 1.15

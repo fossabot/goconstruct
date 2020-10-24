@@ -18,22 +18,22 @@ import (
 type execFn func(context.Context, []string) error
 
 type generateConfig struct {
-	templatesPath      *string
+	templatesPath      string
 	templates          []string
-	templateConfigFile *string
-	dest               *string
+	templateConfigFile string
+	dest               string
 }
 
 func generate(cfg generateConfig, logger *log.Logger) execFn {
 	return func(ctx context.Context, _ []string) error {
-		tmplVarDefs, err := readDynamicConfig(*cfg.templateConfigFile)
+		tmplVarDefs, err := readDynamicConfig(cfg.templateConfigFile)
 		if err != nil {
 			return err
 		}
 
 		for _, tmpl := range cfg.templates {
-			src := filepath.Join(*cfg.templatesPath, tmpl)
-			dst := filepath.Join(*cfg.dest, tmpl)
+			src := filepath.Join(cfg.templatesPath, tmpl)
+			dst := filepath.Join(cfg.dest, tmpl)
 
 			if err := copyDir(dst, src); err != nil {
 				return err
@@ -76,7 +76,8 @@ func renderFile(filename string, config map[string]interface{}) error {
 		return err
 	}
 
-	tmpl := template.Must(template.New(filename).Parse(string(t)))
+	tmpl := template.New(filename).Delims("{{{", "}}}")
+	tmpl = template.Must(tmpl.Parse(string(t)))
 
 	buf := &bytes.Buffer{}
 	err = tmpl.Execute(buf, config)

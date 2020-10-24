@@ -1,4 +1,4 @@
-package {{.Name}}
+package {{{.Name}}}
 
 import (
 	"context"
@@ -10,12 +10,12 @@ import (
 
 func NewCommand(logger *log.Logger) *ffcli.Command {
 	var (
-		rootFlagSet = flag.NewFlagSet("{{.Name}}", flag.ExitOnError)
+		rootFlagSet = flag.NewFlagSet("{{{.Name}}}", flag.ExitOnError)
 	)
 
 	return &ffcli.Command{
-		Name:       "{{.Name}}",
-		ShortUsage: "{{.Name}} <subcommand>",
+		Name:       "{{{.Name}}}",
+		ShortUsage: "{{{.Name}}} <subcommand>",
 		FlagSet:    rootFlagSet,
 		Exec: func(context.Context, []string) error {
 			return flag.ErrHelp

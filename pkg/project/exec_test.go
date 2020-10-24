@@ -136,9 +136,9 @@ func TestRenderDir(t *testing.T) {
 	}
 
 	err = ioutil.WriteFile(filepath.Join(tmplSubDir, "main.txt"), []byte(`
-{{.Foo}}
+{{{.Foo}}}
 hello
-{{.Bar}}`), 0644)
+{{{.Bar}}}`), 0644)
 	if err != nil {
 		t.Fatal(err)
 	}
