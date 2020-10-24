@@ -7,7 +7,7 @@
 3. Run the test suite
 
   ```sh
-  make test-all
+  make all
   ```
 
 4. Open a pull request.
