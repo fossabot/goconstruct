@@ -9,7 +9,7 @@ package tools
 
 import (
 	_ "github.com/golang/protobuf/protoc-gen-go"
+	_ "github.com/goreleaser/goreleaser"
 	_ "golang.org/x/tools/cmd/goimports"
 	_ "honnef.co/go/tools/cmd/staticcheck"
-	_ "github.com/goreleaser/goreleaser"
 )
